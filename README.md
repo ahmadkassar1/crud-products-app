@@ -30,14 +30,3 @@ The project allows users to manage products with calculated totals, search funct
 - 🎨 **Responsive UI** – Styled with modern CSS animations and layouts.
 
 ---
-
-## 🗂️ Project Structure
-
-crud-products-app/
-│
-├── index.html # Main HTML file
-├── css/
-│ └── styles.css # Styling (responsive design)
-├── js/
-│ └── main.js # JavaScript logic (CRUD + local storage)
-└── README.md # Documentation
