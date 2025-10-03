@@ -24,7 +24,7 @@ onload = () => {
   clearInputs();
 };
 
-//get total
+
 function getTotal() {
   if (price.value != "") {
     let result = +price.value + +taxes.value + +ads.value - +discount.value;
@@ -37,7 +37,6 @@ function getTotal() {
   }
 }
 
-//create product
 let dataPro = JSON.parse(localStorage.getItem("products_data")) || [];
 function createProduct() {
   let newPro = {
@@ -70,7 +69,7 @@ submit.onclick = () => {
   createProduct();
 };
 
-//clear inputs
+
 function clearInputs() {
   title.value = "";
   price.value = "";
@@ -84,7 +83,7 @@ function clearInputs() {
   document.getElementById("search").value = "";
   submit.classList.add("disabled");
 }
-//check inputs data
+
 
 function canCreate() {
   return (
@@ -104,7 +103,7 @@ function handleSubmitButtonStatus() {
     ? submit.classList.add("dabled")
     : submit.classList.remove("disabled");
 }
-// main inputs
+
 title.onkeyup = () => {
   getTotal();
   handleSubmitButtonStatus();
@@ -124,7 +123,7 @@ category.onkeyup = () => {
   getTotal();
   handleSubmitButtonStatus();
 };
-//read
+
 function showData() {
   tbody.innerHTML = "";
   let table;
