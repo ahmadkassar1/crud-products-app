@@ -1,0 +1,16 @@
+{
+  "name": "product-manager",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A browser-local product manager built with vanilla JavaScript.",
+  "scripts": {
+    "check": "node --check js/main.js && node --check js/products.js && node --check js/storage.js && node --check js/ui.js && node --check scripts/serve.js && node --check scripts/build.js",
+    "test": "node --test",
+    "dev": "node scripts/serve.js",
+    "build": "node scripts/build.js"
+  },
+  "engines": {
+    "node": ">=24 <25"
+  }
+}
