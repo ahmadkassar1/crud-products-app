@@ -1,85 +1,240 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Product Manager - CRUD System</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A browser-based product manager with validated prices, search and local saving."
+    />
+    <title>Product Manager</title>
     <link rel="stylesheet" href="./css/styles.css" />
+    <script type="module" src="./js/main.js"></script>
   </head>
   <body>
-    <div class="cruds">
-      <div class="head">
-        <h2>CRUDS</h2>
-        <p>CREATE • READ • UPDATE • DELETE • SEARCH</p>
-      </div>
-
-      <div class="input">
-        <input type="text" id="title" placeholder="Product Title" />
-        <div class="price">
-          <input type="number" id="price" placeholder="Price" />
-          <input
-            onkeyup="getTotal()"
-            type="number"
-            id="taxes"
-            placeholder="Taxes"
-          />
-          <input
-            onkeyup="getTotal()"
-            type="number"
-            id="ads"
-            placeholder="Ads"
-          />
-          <input
-            onkeyup="getTotal()"
-            type="number"
-            id="discount"
-            placeholder="Discount"
-          />
-          <small id="total"></small>
-        </div>
-        <input type="number" id="count" placeholder="Count (Max 99)" />
-        <input type="text" id="category" placeholder="Category" />
-        <button id="submit" class="disabled">Create Product</button>
-      </div>
-
-      <div class="output">
-        <div class="searchBlock">
-          <input
-            type="text"
-            id="search"
-            placeholder="Search products..."
-            onkeyup="searchData(this.value)"
-          />
-          <div class="btn-search">
-            <button id="searchTitle" onclick="changeSearchMode('title')">
-              Search by Title
-            </button>
-            <button id="searchCategory" onclick="changeSearchMode('category')">
-              Search by Category
+    <a class="skip-link" href="#product-form">Skip to product form</a>
+    <main class="cruds">
+      <header class="head">
+        <h1>Product Manager</h1>
+        <p>Create, edit and find your products. Saved in this browser.</p>
+      </header>
+      <section
+        id="storage-warning"
+        class="storage-warning"
+        aria-label="Storage problem"
+        hidden
+      >
+        <p id="storage-message" role="alert"></p>
+        <button type="button" id="download-saved" hidden>
+          Download saved data for recovery
+        </button>
+      </section>
+      <section class="input" aria-labelledby="form-heading">
+        <h2 id="form-heading">Add a product</h2>
+        <p class="hint">
+          Amounts use two decimal places. Optional charges default to zero.
+        </p>
+        <form id="product-form" novalidate>
+          <div class="field">
+            <label for="title">Product title <span>(required)</span></label>
+            <input
+              name="title"
+              id="title"
+              required
+              maxlength="120"
+              autocomplete="off"
+              aria-describedby="title-error"
+            />
+            <p class="field-error" id="title-error"></p>
+          </div>
+          <div class="price">
+            <div class="field">
+              <label for="price">Price <span>(required)</span></label>
+              <input
+                name="price"
+                id="price"
+                type="number"
+                min="0"
+                max="9999999.99"
+                step="0.01"
+                required
+                inputmode="decimal"
+                aria-describedby="price-error"
+              />
+              <p class="field-error" id="price-error"></p>
+            </div>
+            <div class="field">
+              <label for="taxes">Taxes</label>
+              <input
+                name="taxes"
+                id="taxes"
+                type="number"
+                min="0"
+                max="9999999.99"
+                step="0.01"
+                inputmode="decimal"
+                aria-describedby="taxes-error"
+              />
+              <p class="field-error" id="taxes-error"></p>
+            </div>
+            <div class="field">
+              <label for="ads">Advertising</label>
+              <input
+                name="ads"
+                id="ads"
+                type="number"
+                min="0"
+                max="9999999.99"
+                step="0.01"
+                inputmode="decimal"
+                aria-describedby="ads-error"
+              />
+              <p class="field-error" id="ads-error"></p>
+            </div>
+            <div class="field">
+              <label for="discount">Discount</label>
+              <input
+                name="discount"
+                id="discount"
+                type="number"
+                min="0"
+                max="9999999.99"
+                step="0.01"
+                inputmode="decimal"
+                aria-describedby="discount-error"
+              />
+              <p class="field-error" id="discount-error"></p>
+            </div>
+          </div>
+          <p class="total">
+            Unit total:
+            <output id="total" for="price taxes ads discount">—</output>
+          </p>
+          <div class="details">
+            <div class="field" id="quantity-field">
+              <label for="count">Quantity <span>(1–99)</span></label>
+              <input
+                name="count"
+                id="count"
+                type="number"
+                min="1"
+                max="99"
+                step="1"
+                value="1"
+                required
+                inputmode="numeric"
+                aria-describedby="count-error"
+              />
+              <p class="field-error" id="count-error"></p>
+            </div>
+            <div class="field">
+              <label for="category">Category <span>(required)</span></label>
+              <input
+                name="category"
+                id="category"
+                required
+                maxlength="60"
+                autocomplete="off"
+                aria-describedby="category-error"
+              />
+              <p class="field-error" id="category-error"></p>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" id="submit">Create product</button>
+            <button type="button" id="cancel-edit" class="secondary" hidden>
+              Cancel edit
             </button>
           </div>
-          <div id="deleteAll"></div>
+        </form>
+      </section>
+      <div class="feedback">
+        <p id="status" role="status" aria-live="polite" aria-atomic="true"></p>
+        <button type="button" class="secondary" id="undo" hidden>
+          Undo deletion
+        </button>
+      </div>
+      <section class="output" aria-labelledby="products-heading">
+        <div class="section-heading">
+          <h2 id="products-heading">Your products</h2>
+          <p id="product-count" role="status"></p>
+        </div>
+        <div class="search-controls">
+          <div class="field">
+            <label for="search">Search products</label
+            ><input
+              type="search"
+              id="search"
+              placeholder="Type to filter…"
+              autocomplete="off"
+            />
+          </div>
+          <div class="field">
+            <label for="search-field">Search by</label
+            ><select id="search-field">
+              <option value="title">Title</option>
+              <option value="category">Category</option>
+            </select>
+          </div>
+        </div>
+        <button type="button" id="delete-all" class="danger" disabled>
+          Delete all
+        </button>
+        <p class="hint" id="table-hint">
+          On smaller screens, scroll the table sideways to see all columns.
+        </p>
+        <div
+          class="table-scroll"
+          role="region"
+          aria-label="Products table"
+          aria-describedby="table-hint"
+          tabindex="0"
+        >
           <table>
+            <caption class="sr-only">
+              Product prices, charges, totals and actions. Amounts have two
+              decimal places.
+            </caption>
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Price</th>
-                <th>Taxes</th>
-                <th>Ads</th>
-                <th>Discount</th>
-                <th>Total</th>
-                <th>Category</th>
-                <th>Update</th>
-                <th>Delete</th>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Price</th>
+                <th scope="col">Taxes</th>
+                <th scope="col">Advertising</th>
+                <th scope="col">Discount</th>
+                <th scope="col">Total</th>
+                <th scope="col">Category</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
               </tr>
             </thead>
             <tbody id="tbody"></tbody>
           </table>
         </div>
+      </section>
+      <footer>
+        <p>
+          Products stay on this device. There is no account, server sync or
+          cloud backup.
+        </p>
+      </footer>
+    </main>
+    <dialog
+      id="delete-dialog"
+      aria-labelledby="delete-heading"
+      aria-describedby="delete-message"
+    >
+      <h2 id="delete-heading">Delete products?</h2>
+      <p id="delete-message"></p>
+      <div class="form-actions">
+        <button type="button" id="cancel-delete" class="secondary">
+          Keep products
+        </button>
+        <button type="button" id="confirm-delete" class="danger">
+          Delete products
+        </button>
       </div>
-    </div>
-
-    <script src="./js/main.js"></script>
+    </dialog>
   </body>
 </html>
