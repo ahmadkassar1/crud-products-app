@@ -2,6 +2,8 @@
 
 A small product-management app built with HTML, CSS and vanilla JavaScript. Create and edit products, calculate unit totals, search by title or category, and save records in the current browser.
 
+[Try the live demo](https://crud-products-app-eta.vercel.app/)
+
 ## Run locally
 
 Use Node.js 24 (also specified in `.nvmrc`). There are no third-party runtime or development dependencies, so no install step is required.
@@ -58,7 +60,7 @@ npm run build
 
 `check` performs JavaScript syntax checks; it is not a full lint or accessibility audit. The Node test suite covers invalid input, decimal math, independent IDs, editing after deletion, search, legacy migration, unrelated storage keys, malformed data and denied/quota-limited storage.
 
-`build` recreates only this project's `dist/` directory and copies the static application files. Host that directory on a static hosting service; no server, environment variables or backend are needed. CI runs syntax checks, tests and build on pull requests and pushes to main. A published demo URL has not yet been added.
+`build` recreates only this project's `dist/` directory and copies the static application files. Host that directory on a static hosting service; no server, environment variables or backend are needed. `vercel.json` selects the Other framework preset, `npm run build` and `dist` output; Node 24 is specified in `package.json`. Vercel deploys the linked repository's main branch. CI runs syntax checks, tests and build on pull requests and pushes to main.
 
 ## Browser storage and recovery
 
@@ -76,4 +78,6 @@ Products are specific to the browser and origin. Moving to a different deploymen
 
 The repair was checked locally on 11 October 2026: create/edit/search, input errors, literal HTML-like text, deletion cancellation/undo, reload, cross-tab changes and stable IDs. Page bounds were checked at 320, 375, 768 and 1440 pixels; the table scrolls internally on narrow viewports. Earlier invalid test data displayed the recovery warning and could be exported.
 
-Storage-denial, quota-failure, malformed JSON and legacy migration have automated tests. Physical devices, full screen-reader workflows and a hosted deployment have not yet been verified. No license has been added; existing repository licensing remains unchanged.
+The production demo was checked on 11 October 2026 for validation, decimal totals, Enter-key creation, editing through another row's deletion, cancellation, undo, reload persistence, category search and literal HTML-like text. Page bounds passed at 320, 375, 768 and 1440 pixels; narrow tables scroll within their container. No browser console errors were captured during these checks.
+
+Storage-denial, quota-failure, malformed JSON and legacy migration have automated tests. Physical devices and full screen-reader workflows have not yet been verified. No license has been added; existing repository licensing remains unchanged.
